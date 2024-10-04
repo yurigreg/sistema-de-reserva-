@@ -1,0 +1,93 @@
+#include <iostream>
+using namespace std;
+
+// Função para exibir o mapa de assentos com poltronas de A até F
+string mostrarAssentos(char assentos[10][6]) {
+    string resultado = "Mapa de assentos do avião:\n";
+    char letrasAssentos[] = {'A', 'B', 'C', 'D', 'E', 'F'}; // Assentos rotulados de A a F
+
+    for (int i = 0; i < 10; i++) {
+        resultado += "Fileira " + to_string(i + 1) + ": ";
+        for (int j = 0; j < 6; j++) {
+            resultado += letrasAssentos[j]; // Adiciona a letra correspondente ao assento
+            resultado += ":";
+            resultado += assentos[i][j]; // Adiciona se está ocupado ou livre
+            resultado += " ";
+        }
+        resultado += "\n";
+    }
+    return resultado;
+}
+
+// Função para reservar um assento
+bool reservarAssento(char assentos[10][6], int fileira, char poltrona) {
+    int coluna;
+
+    // Converte a letra do assento (poltrona) em um número de índice (0 a 5)
+    switch(poltrona) {
+        case 'A': coluna = 0; break;
+        case 'B': coluna = 1; break;
+        case 'C': coluna = 2; break;
+        case 'D': coluna = 3; break;
+        case 'E': coluna = 4; break;
+        case 'F': coluna = 5; break;
+        default:
+            return false; // Se a letra da poltrona for inválida, retorna falso
+    }
+
+    if (assentos[fileira][coluna] == 'X') {
+        return false; // Retorna falso se o assento já estiver ocupado
+    } else {
+        assentos[fileira][coluna] = 'X'; // Marca o assento como ocupado
+        return true;  // Retorna verdadeiro se a reserva for bem-sucedida
+    }
+}
+
+int main() {
+    char assentos[10][6]; // Matriz de 10 fileiras e 6 assentos por fileira
+
+    // Inicializa todos os assentos como disponíveis (marcados com 'O')
+    for (int i = 0; i < 10; i++) {
+        for (int j = 0; j < 6; j++) {
+            assentos[i][j] = 'O';
+        }
+    }
+
+    int fileira;
+    char poltrona, opcao;
+
+    cout << "Bem-vindo ao sistema de reservas de assentos do avião!\n";
+
+    do {
+        // Mostra o mapa de assentos antes de cada reserva
+        cout << mostrarAssentos(assentos);  // A função retorna uma string que será exibida
+
+        // Solicita fileira e assento ao usuário
+        cout << "Digite o número da fileira (1-10): ";
+        cin >> fileira;
+        cout << "Digite a letra do assento (A-F): ";
+        cin >> poltrona;
+
+        // Valida a entrada do usuário
+        if (fileira < 1 || fileira > 10 || poltrona < 'A' || poltrona > 'F') {
+            cout << "Entrada inválida! Tente novamente.\n";
+        } else {
+            // Realiza a reserva
+            bool sucesso = reservarAssento(assentos, fileira - 1, poltrona); // Ajusta índice da fileira
+            if (sucesso) {
+                cout << "Assento reservado com sucesso!\n";
+            } else {
+                cout << "Este assento já está ocupado ou inválido. Tente outro.\n";
+            }
+        }
+
+        // Pergunta se o usuário deseja reservar outro assento
+        cout << "Deseja reservar outro assento? (S/N): ";
+        cin >> opcao;
+
+    } while (opcao == 'S' || opcao == 's');
+
+    cout << "Obrigado por utilizar o sistema de reservas!\n";
+
+    return 0;
+}
